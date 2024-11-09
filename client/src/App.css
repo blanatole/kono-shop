@@ -2122,6 +2122,15 @@ a:hover {
   background: #f1f1f1 !important;
 }
 
+.button-group {
+  display: flex;
+  gap: 10px;
+}
+
+.button-group .btn-blue {
+  flex: 1;
+}
+
 .orderInfo {
   background: #fafafa !important;
   padding: 25px !important;

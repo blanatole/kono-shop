@@ -29,13 +29,14 @@
 
 ```bash
 git clone https://github.com/yourusername/konoshop.git
-cd konoshop
-cd client
 ```
 
-### 2. Cài đặt dependencies
+### 2. Cài đặt dependencies cho từng thư mục:
+- **Mở 3 terminal**
+- **Cài đặt cho thư mục server**
 ```bash
-npm install
+cd server
+npm install --legacy-peer-deps
 ```
 
 ### 3. Chạy ứng dụng

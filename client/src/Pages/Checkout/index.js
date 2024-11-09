@@ -1,12 +1,19 @@
 import React, { useContext, useEffect, useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import { IoBagCheckOutline } from "react-icons/io5";
 
 import { MyContext } from '../../App';
 import { fetchDataFromApi, postData } from '../../utils/api';
 
 import { useNavigate } from 'react-router-dom';
+
+import axios from 'axios';
+
+import { BsCash } from "react-icons/bs";
+
+import { MdOutlinePayment } from "react-icons/md";
+
+
 
 const Checkout = () => {
 
@@ -45,6 +52,40 @@ const Checkout = () => {
             [e.target.name]: e.target.value
         }))
     }
+
+    // const handlePayment = async () => {
+    //     try {
+    //         const response = await axios.post('/create_payment_url', {
+    //             amount: 100000,
+    //             orderDescription: 'Thanh toán đơn hàng',
+    //             orderType: 'billpayment',
+    //             language: 'vn',
+    //         });
+    //         window.location.href = response.data.paymentUrl;
+    //     } catch (error) {
+    //         console.error('Error creating payment URL:', error);
+    //     }
+    // };
+
+    const calculateAmount = () => {
+        return cartData.length !== 0 ? cartData.map(item => parseInt(item.price) * item.quantity).reduce((total, value) => total + value, 0) : 0;
+    }
+
+    const handlePayment = async () => {
+        console.log('handlePayment called');
+        const amount = calculateAmount(); // Tính toán giá trị amount từ cartData
+        try {
+            const response = await axios.post(`http://localhost:4005/api/vnpay/create_payment_url`, {
+                amount: amount, // Sử dụng giá trị amount đã tính toán
+                orderDescription: 'Thanh toán đơn hàng',
+                orderType: 'billpayment',
+                language: 'vn',
+            });
+            window.location.href = response.data.paymentUrl;
+        } catch (error) {
+            console.error('Error creating payment URL:', error);
+        }
+    };
 
     const context = useContext(MyContext);
     const history = useNavigate();
@@ -180,7 +221,7 @@ const Checkout = () => {
         const addressInfo = {
             name: formFields.fullName,
             phoneNumber: formFields.phoneNumber,
-            address: formFields.streetAddressLine1 + ", " +  formFields.streetAddressLine2 + ", " + formFields.district + ", " + formFields.city,
+            address: formFields.streetAddressLine1 + ", " + formFields.streetAddressLine2 + ", " + formFields.district + ", " + formFields.city,
             pincode: formFields.zipCode,
             date: new Date().toLocaleString(
                 "en-US",
@@ -217,166 +258,170 @@ const Checkout = () => {
         })
     }
 
-return (
-    <section className='section'>
-        <div className='container'>
-            <form className='checkoutForm' onSubmit={checkout}>
-                <div className='row'>
-                    <div className='col-md-8'>
-                        <h2 className='hd'>THÔNG TIN ĐẶT HÀNG</h2>
+    return (
+        <section className='section'>
+            <div className='container'>
+                <form className='checkoutForm' onSubmit={checkout}>
+                    <div className='row'>
+                        <div className='col-md-8'>
+                            <h2 className='hd'>THÔNG TIN ĐẶT HÀNG</h2>
 
-                        <div className='row mt-3'>
-                            <div className='col-md-12'>
-                                <div className='form-group'>
-                                    <TextField label="Họ tên *" variant="outlined" className='w-100' size="small" name="fullName" onChange={onChangeInput} />
+                            <div className='row mt-3'>
+                                <div className='col-md-12'>
+                                    <div className='form-group'>
+                                        <TextField label="Họ tên *" variant="outlined" className='w-100' size="small" name="fullName" onChange={onChangeInput} />
+                                    </div>
                                 </div>
-                            </div>
 
-                            {/* <div className='col-md-6'>
+                                {/* <div className='col-md-6'>
                                 <div className='form-group'>
                                     <TextField label="Country *" variant="outlined" className='w-100' size="small" name="country" onChange={onChangeInput} />
                                 </div>
                             </div> */}
 
 
+                            </div>
+
+
+                            <h6>Địa chỉ *</h6>
+
+                            <div className='row'>
+                                <div className='col-md-12'>
+                                    <div className='form-group'>
+                                        <TextField label="Số nhà và tên đường" variant="outlined" className='w-100' size="small" name="streetAddressLine1" onChange={onChangeInput} />
+                                    </div>
+
+                                    <div className='form-group'>
+                                        <TextField label="Ghi chú thêm..." variant="outlined" className='w-100' size="small" name="streetAddressLine2" onChange={onChangeInput} />
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <h6>Quận/Huyện *</h6>
+
+                            <div className='row'>
+                                <div className='col-md-12'>
+                                    <div className='form-group'>
+                                        <TextField label="" variant="outlined" className='w-100' size="small" name="district" onChange={onChangeInput} />
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <h6>Tỉnh/Thành phố *</h6>
+
+                            <div className='row'>
+                                <div className='col-md-12'>
+                                    <div className='form-group'>
+                                        <TextField label="" variant="outlined" className='w-100' size="small" name="city" onChange={onChangeInput} />
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+
+
+                            <h6>Mã bưu điện *</h6>
+
+                            <div className='row'>
+                                <div className='col-md-12'>
+                                    <div className='form-group'>
+                                        <TextField label="" variant="outlined" className='w-100' size="small" name="zipCode" onChange={onChangeInput} />
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                            <div className='row'>
+                                <div className='col-md-6'>
+                                    <div className='form-group'>
+                                        <TextField label="Số điện thoại" variant="outlined" className='w-100' size="small" name="phoneNumber" onChange={onChangeInput} />
+                                    </div>
+                                </div>
+
+                                <div className='col-md-6'>
+                                    <div className='form-group'>
+                                        <TextField label="Email" variant="outlined" className='w-100' size="small" name="email" onChange={onChangeInput} />
+                                    </div>
+                                </div>
+
+                            </div>
+
+
                         </div>
 
+                        <div className='col-md-4'>
+                            <div className='card orderInfo'>
+                                <h4 className='hd'>ĐƠN HÀNG</h4>
+                                <div className='table-responsive mt-3'>
+                                    <table className='table table-borderless'>
+                                        <thead>
+                                            <tr>
+                                                <th>Sản phẩm</th>
+                                                <th>Thành tiền</th>
+                                            </tr>
+                                        </thead>
 
-                        <h6>Địa chỉ *</h6>
+                                        <tbody>
+                                            {
+                                                cartData?.length !== 0 && cartData?.map((item, index) => {
+                                                    return (
+                                                        <tr>
+                                                            <td>{item?.productTitle?.substr(0, 20) + '...'}  <b>× {item?.quantity}</b></td>
 
-                        <div className='row'>
-                            <div className='col-md-12'>
-                                <div className='form-group'>
-                                    <TextField label="Số nhà và tên đường" variant="outlined" className='w-100' size="small" name="streetAddressLine1" onChange={onChangeInput} />
+                                                            <td>
+
+                                                                {
+                                                                    item?.subTotal?.toLocaleString('en-US', { style: 'currency', currency: 'VND' })
+                                                                }
+
+                                                            </td>
+                                                        </tr>
+
+                                                    )
+                                                })
+                                            }
+
+
+
+                                            <tr>
+                                                <td>Tổng tiền </td>
+
+                                                <td>
+
+                                                    {
+                                                        (cartData?.length !== 0 ?
+                                                            cartData?.map(item => parseInt(item.price) * item.quantity).reduce((total, value) => total + value, 0) : 0)?.toLocaleString('en-US', { style: 'currency', currency: 'VND' })
+                                                    }
+
+
+                                                </td>
+                                            </tr>
+
+
+                                        </tbody>
+                                    </table>
                                 </div>
+                                
+                                <div className='form-group mt-3 button-group' >
+                                    <Button type="submit" className='btn-blue bg-red btn-lg btn-big'
+                                    ><BsCash /> &nbsp; COD</Button>
 
-                                <div className='form-group'>
-                                    <TextField label="Ghi chú thêm..." variant="outlined" className='w-100' size="small" name="streetAddressLine2" onChange={onChangeInput} />
-                                </div>
-
-                            </div>
-                        </div>
-
-                        <h6>Quận/Huyện *</h6>
-
-                        <div className='row'>
-                            <div className='col-md-12'>
-                                <div className='form-group'>
-                                    <TextField label="" variant="outlined" className='w-100' size="small" name="district" onChange={onChangeInput} />
-                                </div>
-
-                            </div>
-                        </div>
-
-                        <h6>Tỉnh/Thành phố *</h6>
-
-                        <div className='row'>
-                            <div className='col-md-12'>
-                                <div className='form-group'>
-                                    <TextField label="" variant="outlined" className='w-100' size="small" name="city" onChange={onChangeInput} />
-                                </div>
-
-                            </div>
-                        </div>
-
-                        
-
-
-                        <h6>Mã bưu điện *</h6>
-
-                        <div className='row'>
-                            <div className='col-md-12'>
-                                <div className='form-group'>
-                                    <TextField label="" variant="outlined" className='w-100' size="small" name="zipCode" onChange={onChangeInput} />
-                                </div>
-
-                            </div>
-                        </div>
-
-
-                        <div className='row'>
-                            <div className='col-md-6'>
-                                <div className='form-group'>
-                                    <TextField label="Số điện thoại" variant="outlined" className='w-100' size="small" name="phoneNumber" onChange={onChangeInput} />
-                                </div>
-                            </div>
-
-                            <div className='col-md-6'>
-                                <div className='form-group'>
-                                    <TextField label="Email" variant="outlined" className='w-100' size="small" name="email" onChange={onChangeInput} />
+                                    <Button onClick={handlePayment} className='btn-blue btn-lg btn-big '
+                                    ><MdOutlinePayment /> &nbsp; VNPay</Button>
                                 </div>
                             </div>
-
                         </div>
 
 
                     </div>
-
-                    <div className='col-md-4'>
-                        <div className='card orderInfo'>
-                            <h4 className='hd'>ĐƠN HÀNG</h4>
-                            <div className='table-responsive mt-3'>
-                                <table className='table table-borderless'>
-                                    <thead>
-                                        <tr>
-                                            <th>Sản phẩm</th>
-                                            <th>Thành tiền</th>
-                                        </tr>
-                                    </thead>
-
-                                    <tbody>
-                                        {
-                                            cartData?.length !== 0 && cartData?.map((item, index) => {
-                                                return (
-                                                    <tr>
-                                                        <td>{item?.productTitle?.substr(0, 20) + '...'}  <b>× {item?.quantity}</b></td>
-
-                                                        <td>
-
-                                                            {
-                                                                item?.subTotal?.toLocaleString('en-US', { style: 'currency', currency: 'VND' })
-                                                            }
-
-                                                        </td>
-                                                    </tr>
-
-                                                )
-                                            })
-                                        }
-
-
-
-                                        <tr>
-                                            <td>Tổng tiền </td>
-
-                                            <td>
-
-                                                {
-                                                    (cartData?.length !== 0 ?
-                                                        cartData?.map(item => parseInt(item.price) * item.quantity).reduce((total, value) => total + value, 0) : 0)?.toLocaleString('en-US', { style: 'currency', currency: 'VND' })
-                                                }
-
-
-                                            </td>
-                                        </tr>
-
-
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            <Button type="submit" className='btn-blue bg-red btn-lg btn-big'
-                            ><IoBagCheckOutline /> &nbsp; Đặt hàng</Button>
-
-                        </div>
-                    </div>
-
-
-                </div>
-            </form>
-        </div>
-    </section>
-)
+                </form>
+            </div>
+        </section>
+    )
 }
 
 export default Checkout;

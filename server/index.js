@@ -3,13 +3,15 @@ const app = express();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
-require('dotenv/config');
+const dotenv = require('dotenv');
 
+dotenv.config();
 
 app.use(cors());
 app.options('*', cors())
 
 //middleware
+app.use(bodyParser.urlencoded({ extended: false })); 
 app.use(bodyParser.json());
 app.use(express.json());
 
@@ -27,6 +29,7 @@ const myListSchema = require('./routes/myList.js');
 const ordersSchema = require('./routes/orders.js');
 const homeBannerSchema = require('./routes/homeBanner.js');
 const searchRoutes = require('./routes/search.js');
+const vnpayRoutes = require('./vnpay/vnpay.js');
 
 app.use("/api/user",userRoutes);
 app.use("/uploads",express.static("uploads"));
@@ -41,7 +44,11 @@ app.use(`/api/my-list`, myListSchema);
 app.use(`/api/orders`, ordersSchema);
 app.use(`/api/homeBanner`, homeBannerSchema);
 app.use(`/api/search`, searchRoutes);
+app.use(`/api/vnpay`, vnpayRoutes);
 
+app.listen(process.env.PORT_VNPAY, () => {
+    console.log(`Server is running at http://localhost:${process.env.PORT_VNPAY}`);
+});
 
 //Database
 mongoose.connect(process.env.CONNECTION_STRING, {
