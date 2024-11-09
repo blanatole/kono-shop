@@ -17,7 +17,8 @@ import { FaHeart } from "react-icons/fa";
 
 
 const ProductDetails = () => {
-
+    const [alertMessage, setAlertMessage] = useState('');
+    const [isError, setIsError] = useState(false);
     const [activeSize, setActiveSize] = useState(null);
     const [activeTabs, setActiveTabs] = useState(0);
     const [productData, setProductData] = useState([]);
@@ -59,7 +60,7 @@ const ProductDetails = () => {
 
 
 
-          
+
 
 
         })
@@ -107,26 +108,60 @@ const ProductDetails = () => {
 
         const user = JSON.parse(localStorage.getItem("user"));
 
+        if (!user) {
+            context.setAlertBox({
+                open: true,
+                error: true,
+                msg: "Đăng nhập để đánh giá !"
+            })
+            return;
+        }
+
+
+
         reviews.customerName = user?.name;
         reviews.customerId = user?.userId;
         reviews.productId = id
+
+        // Kiểm tra người dùng đã đánh giá sản phẩm này chưa
+        const hasReviewed = reviewsData.some(review => review.customerId === user?.userId && review.productId === id);
+        if (hasReviewed) {
+            context.setAlertBox({
+                open: true,
+                error: true,
+                msg: "bạn đã đánh giá sản phẩm này rồi !"
+            })
+            return;
+        }
+
+
 
         setIsLoading(true);
 
         postData("/api/productReviews/add", reviews).then((res) => {
             setIsLoading(false);
-
-            reviews.customerRating = 1;
-
             setReviews({
                 review: "",
                 customerRating: 1
-            })
+            });
 
             fetchDataFromApi(`/api/productReviews?productId=${id}`).then((res) => {
                 setreviewsData(res);
+            });
+
+            // Hiển thị thông báo thành công
+            context.setAlertBox({
+                open: true,
+                error: false,
+                msg: "Đánh giá đã được gửi thành công!"
             })
-        })
+
+        }).catch((error) => {
+            setIsLoading(false);
+            // Hiển thị thông báo lỗi
+            setAlertMessage(error.response.data.message || "Có lỗi xảy ra khi gửi đánh giá.");
+            setIsError(true);
+        });
 
     }
 
@@ -194,7 +229,7 @@ const ProductDetails = () => {
                         msg: "the product added in my list"
                     })
 
-            
+
                     fetchDataFromApi(`/api/my-list?productId=${id}&userId=${user?.userId}`).then((res) => {
                         if (res.length !== 0) {
                             setSsAddedToMyList(true);
@@ -258,7 +293,7 @@ const ProductDetails = () => {
                                 {
                                     productData?.oldPrice != null && (<span className="oldPrice mr-2">{(productData?.oldPrice?.toLocaleString()).toLocaleString()} đ</span>)
                                 }
-                                
+
                                 <span className="netPrice text-danger">{productData?.price?.toLocaleString()} đ</span>
                             </div>
 
@@ -316,31 +351,31 @@ const ProductDetails = () => {
                                 <QuantityBox quantity={quantity} item={productData} selectedItem={selectedItem} />
 
                                 <div className="d-flex align-items-center btnActions">
-                                <Button className="btn-blue btn-lg btn-big btn-round bg-red" onClick={() => addtoCart()}>
-                                    <BsCartFill /> &nbsp;
-                                    {
-                                        context.addingInCart === true ? "Đang thêm..." : " Thêm vào giỏ hàng"
-                                    }
-
-                                </Button>
-
-                                <Tooltip title={`${isAddedToMyList === true ? 'Đã yêu thích' : 'Yêu thích'}`} placement="top">
-                                    <Button className={`btn-blue btn-lg btn-big btn-circle ml-4`} onClick={() => addToMyList(id)}>
+                                    <Button className="btn-blue btn-lg btn-big btn-round bg-red" onClick={() => addtoCart()}>
+                                        <BsCartFill /> &nbsp;
                                         {
-                                            isAddedToMyList === true ? <FaHeart className="text-danger" />
-
-                                                :
-                                                <FaRegHeart />
+                                            context.addingInCart === true ? "Đang thêm..." : " Thêm vào giỏ hàng"
                                         }
 
                                     </Button>
-                                </Tooltip>
 
-                                <Tooltip title="So sánh" placement="top">
-                                    <Button className="btn-blue btn-lg btn-big btn-circle ml-2">
-                                        <MdOutlineCompareArrows />
-                                    </Button>
-                                </Tooltip>
+                                    <Tooltip title={`${isAddedToMyList === true ? 'Đã yêu thích' : 'Yêu thích'}`} placement="top">
+                                        <Button className={`btn-blue btn-lg btn-big btn-circle ml-4`} onClick={() => addToMyList(id)}>
+                                            {
+                                                isAddedToMyList === true ? <FaHeart className="text-danger" />
+
+                                                    :
+                                                    <FaRegHeart />
+                                            }
+
+                                        </Button>
+                                    </Tooltip>
+
+                                    <Tooltip title="So sánh" placement="top">
+                                        <Button className="btn-blue btn-lg btn-big btn-circle ml-2">
+                                            <MdOutlineCompareArrows />
+                                        </Button>
+                                    </Tooltip>
 
                                 </div>
 
@@ -589,7 +624,7 @@ const ProductDetails = () => {
                         relatedProductData?.length !== 0 && <RelatedProducts title="RELATED PRODUCTS" data={relatedProductData} />
                     }
 
-                  
+
 
                 </div>
             </section>

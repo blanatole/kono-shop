@@ -5,13 +5,13 @@ const router = express.Router();
 
 router.get(`/`, async (req, res) => {
 
-    let  reviews=[];
+    let reviews = [];
 
     try {
 
-        if(req.query.productId!==undefined && req.query.productId!==null && req.query.productId!=="" ){
+        if (req.query.productId !== undefined && req.query.productId !== null && req.query.productId !== "") {
             reviews = await ProductReviews.find({ productId: req.query.productId });
-        }else{
+        } else {
             reviews = await ProductReviews.find();
         }
 
@@ -29,17 +29,17 @@ router.get(`/`, async (req, res) => {
 
 });
 
-router.get(`/get/count`, async (req, res) =>{
+router.get(`/get/count`, async (req, res) => {
     const productsReviews = await ProductReviews.countDocuments()
 
-    if(!productsReviews) {
-        res.status(500).json({success: false})
-    } else{
+    if (!productsReviews) {
+        res.status(500).json({ success: false })
+    } else {
         res.send({
             productsReviews: productsReviews
         });
     }
-   
+
 })
 
 
@@ -57,7 +57,7 @@ router.get('/:id', async (req, res) => {
 
 
 
-router.post('/add', async (req, res) => {
+/*router.post('/add', async (req, res) => {
     
     let review = new ProductReviews({
         customerId: req.body.customerId,
@@ -82,6 +82,27 @@ router.post('/add', async (req, res) => {
 
     res.status(201).json(review);
 
+});*/
+
+router.post('/add', async (req, res) => {
+    const { customerId, productId, customerName, customerRating, review } = req.body;
+
+
+    //kiểm tra tồn tại đánh giá của ng dùng cho sp này chưa
+    const existingReview = await ProductReviews.findOne({ customerId, productId });
+    if (existingReview) {
+        return res.status(400).json({ message: 'Bạn đã đánh giá sản phẩm này rồi.' });
+    }
+
+    try {
+
+        const newReview = new ProductReviews({ customerId, productId, customerName, customerRating, review });
+        await newReview.save();
+        res.status(201).json(newReview);
+
+    } catch (error) {
+        res.status(500).json({ message: 'Có lỗi xảy ra', error });
+    }
 });
 
 
