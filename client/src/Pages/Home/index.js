@@ -192,7 +192,7 @@ const Home = () => {
                         ?.reverse()
                         ?.map((item, index) => {
                           return (
-                              <ProductItem item={item} key={index} />
+                            <ProductItem item={item} key={index} />
                           );
                         })}
                   </div>
@@ -242,63 +242,63 @@ const Home = () => {
               </div>
 
               <div className="product_row w-100 mt-2">
-              {
-                context.windowWidth>992 ?
-                <Swiper
-                slidesPerView={4}
-                spaceBetween={0}
-                navigation={true}
-                slidesPerGroup={context.windowWidth > 992 ? 3 : 1}
-                modules={[Navigation]}
-                className="mySwiper"
-                breakpoints={{
-                  300: {
-                    slidesPerView: 1,
-                    spaceBetween: 5,
-                  },
-                  400: {
-                    slidesPerView: 2,
-                    spaceBetween: 5,
-                  },
-                  600: {
-                    slidesPerView: 3,
-                    spaceBetween: 5,
-                  },
-                  750: {
-                    slidesPerView: 4,
-                    spaceBetween: 5,
-                  },
-                }}
-              >
-                {featuredProducts?.length !== 0 &&
-                  featuredProducts
-                    ?.slice(0)
-                    ?.reverse()
-                    ?.map((item, index) => {
-                      return (
-                        <SwiperSlide key={index}>
-                          <ProductItem item={item} />
-                        </SwiperSlide>
-                      );
-                    })}
-              </Swiper>
+                {
+                  context.windowWidth > 992 ?
+                    <Swiper
+                      slidesPerView={4}
+                      spaceBetween={0}
+                      navigation={true}
+                      slidesPerGroup={context.windowWidth > 992 ? 3 : 1}
+                      modules={[Navigation]}
+                      className="mySwiper"
+                      breakpoints={{
+                        300: {
+                          slidesPerView: 1,
+                          spaceBetween: 5,
+                        },
+                        400: {
+                          slidesPerView: 2,
+                          spaceBetween: 5,
+                        },
+                        600: {
+                          slidesPerView: 3,
+                          spaceBetween: 5,
+                        },
+                        750: {
+                          slidesPerView: 4,
+                          spaceBetween: 5,
+                        },
+                      }}
+                    >
+                      {featuredProducts?.length !== 0 &&
+                        featuredProducts
+                          ?.slice(0)
+                          ?.reverse()
+                          ?.map((item, index) => {
+                            return (
+                              <SwiperSlide key={index}>
+                                <ProductItem item={item} />
+                              </SwiperSlide>
+                            );
+                          })}
+                    </Swiper>
 
 
-              :
+                    :
 
-              <div className="productScroller">
-               {featuredProducts?.length !== 0 &&
-                  featuredProducts
-                    ?.slice(0)
-                    ?.reverse()
-                    ?.map((item, index) => {
-                      return (
-                          <ProductItem item={item} key={index} />
-                      );
-                    })}
-              </div>
-              }
-               
+                    <div className="productScroller">
+                      {featuredProducts?.length !== 0 &&
+                        featuredProducts
+                          ?.slice(0)
+                          ?.reverse()
+                          ?.map((item, index) => {
+                            return (
+                              <ProductItem item={item} key={index} />
+                            );
+                          })}
+                    </div>
+                }
+
               </div>
             </div>
           </div>

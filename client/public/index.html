@@ -1,27 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    
-    <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="Web site created using create-react-app"
-    />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="theme-color" content="#000000" />
+  <meta name="description" content="Web site created using create-react-app" />
+  <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
 
 
 
-    <title>KonoLife Shop</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
-  
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-  </body>
+  <title>KonoLife Shop</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <div class="container-AI">
+    <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+    <df-messenger intent="WELCOME" chat-title="KonoLife xin chàooo!" agent-id="3417c8af-2979-4e64-9e1e-7909c2034ac9"
+      language-code="vi">
+      <style>
+        df-messenger {
+          --df-messenger-chat-window-height: 10px;
+          --df-messenger-titlebar-border: 10px;
+          --df-messenger-bot-message: #fff;
+          --df-messenger-button-titlebar-color: #0041C2;
+          --df-messenger-button-titlebar-color: #0041C2;
+          --df-messenger-chat-background-color: #fafafa;
+          --df-messenger-font-color: #000;
+          --df-messenger-send-icon: #00adff;
+          --df-messenger-user-message: #e7ebf3;
+          --df-messenger-chip-border-color: #0041C2;
+        }
+      </style>
+    </df-messenger>
+  </div>
+</head>
+
+<body>
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+  <div id="root"></div>
+
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</body>
+
 </html>
