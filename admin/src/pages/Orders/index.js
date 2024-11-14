@@ -52,7 +52,7 @@ const Orders = () => {
 
         window.scrollTo(0, 0);
 
-    
+
         fetchDataFromApi(`/api/orders`).then((res) => {
             setOrders(res);
         })
@@ -163,7 +163,7 @@ const Orders = () => {
                                                     <td>{order?.phoneNumber}</td>
                                                     <td>{order?.address}</td>
                                                     <td>{order?.pincode}</td>
-                                                    <td>{order?.amount} đ</td>
+                                                    <td>{new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(order?.amount)}</td>
                                                     <td>{order?.email}</td>
                                                     <td>{order?.userid}</td>
                                                     <td>
@@ -186,7 +186,7 @@ const Orders = () => {
                         </table>
 
 
-                    
+
                     </div>
 
 

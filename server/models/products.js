@@ -8,7 +8,7 @@ const productSchema = mongoose.Schema({
     description: {
         type: String,
         required: false,
-        default:''
+        default: ''
     },
     images: [
         {
@@ -29,21 +29,21 @@ const productSchema = mongoose.Schema({
         default: 0,
         require: false
     },
-    catName:{
-        type:String,
-        default:''
+    catName: {
+        type: String,
+        default: ''
     },
-    catId:{
-        type:String,
-        default:''
+    catId: {
+        type: String,
+        default: ''
     },
-    subCatId:{
-        type:String,
-        default:''
+    subCatId: {
+        type: String,
+        default: ''
     },
-    subCat:{
-        type:String,
-        default:''
+    subCat: {
+        type: String,
+        default: ''
     },
     category: {
         type: mongoose.Schema.Types.ObjectId,
@@ -78,9 +78,9 @@ const productSchema = mongoose.Schema({
             default: null,
         }
     ],
-    location:{
-        type:String,
-        default:"All"
+    location: {
+        type: String,
+        default: "All"
     },
     dateCreated: {
         type: Date,

@@ -16,50 +16,50 @@ const HomeCat = (props) => {
             <div className="container">
                 <h3 className="mb-3 hd">Featured Categories</h3>
                 <Swiper
-                    slidesPerView={9}
+                    slidesPerView={6}
                     spaceBetween={8}
-                    navigation={context.windowWidth>992 ? true : false}
-                    slidesPerGroup={context.windowWidth>992 ? 3 : 1}
+                    navigation={context.windowWidth > 992}
+                    slidesPerGroup={3}
                     modules={[Navigation]}
                     loop={false}
                     className="mySwiper"
                     breakpoints={{
                         320: {
+                            slidesPerView: 2,
+                            spaceBetween: 10,
+                        },
+                        500: {
                             slidesPerView: 3,
                             spaceBetween: 10,
-                          },
-                        500: {
-                          slidesPerView: 5,
-                          spaceBetween: 10,
                         },
                         768: {
-                          slidesPerView: 8,
-                          spaceBetween: 10,
+                            slidesPerView: 4,
+                            spaceBetween: 10,
+                        },
+                        992: {
+                            slidesPerView: 5,
+                            spaceBetween: 10,
+                        },
+                        1200: {
+                            slidesPerView: 6,
+                            spaceBetween: 10,
                         }
-                      }}
+                    }}
                 >
-
-
-
                     {
-                        props.catData?.length !== 0 && props.catData?.map((cat, index) => {
-                            return (
-                                <SwiperSlide key={index}>
-                                    <Link to={`/products/category/${cat._id}`}>
-                                        <div className="item text-center cursor" style={{ background: cat.color }}>
-                                            <img src={cat.images[0]} />
-
-                                            <h6>{cat.name}</h6>
-                                        </div>
-                                    </Link>
-                                </SwiperSlide>
-                            )
-                        })
+                        props.catData?.length !== 0 && props.catData?.map((cat, index) => (
+                            <SwiperSlide key={index}>
+                                <Link to={`/products/category/${cat._id}`}>
+                                    <div className="item text-center cursor" style={{ background: cat.color }}>
+                                        <img src={cat.images?.[0]} alt={`${cat.name} category`} />
+                                        <h6>{cat.name}</h6>
+                                    </div>
+                                </Link>
+                            </SwiperSlide>
+                        ))
                     }
-
-
-
                 </Swiper>
+
             </div>
         </section>
     )
