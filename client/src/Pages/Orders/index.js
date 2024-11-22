@@ -12,19 +12,19 @@ const Orders = () => {
     const [page, setPage] = useState(1);
 
     const [isOpenModal, setIsOpenModal] = useState(false);
-    const [isLogin,setIsLogin]  = useState(false);
+    const [isLogin, setIsLogin] = useState(false);
 
     const history = useNavigate();
 
     useEffect(() => {
-        window.scrollTo(0, 0);  
+        window.scrollTo(0, 0);
 
         const token = localStorage.getItem("token");
-        if(token!=="" && token!==undefined  && token!==null){
-          setIsLogin(true);
+        if (token !== "" && token !== undefined && token !== null) {
+            setIsLogin(true);
         }
-        else{
-          history("/signIn");
+        else {
+            history("/signIn");
         }
 
         const user = JSON.parse(localStorage.getItem("user"));
@@ -82,7 +82,7 @@ const Orders = () => {
                                                     <td>{order?.phoneNumber}</td>
                                                     <td>{order?.address}</td>
                                                     <td>{order?.pincode}</td>
-                                                    <td>{(order?.amount).toLocaleString()} đ</td>
+                                                    <td>{new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(order?.amount)}</td>
                                                     <td>{order?.email}</td>
                                                     <td>{order?.userid}</td>
                                                     <td>
@@ -107,7 +107,7 @@ const Orders = () => {
                     </div>
 
 
-                   
+
 
                 </div>
             </section>
@@ -136,8 +136,8 @@ const Orders = () => {
                                     return (
                                         <tr>
                                             <td>{item?.productId}</td>
-                                            <td  style={{whiteSpace:"inherit"}}><span>
-                                                {item?.productTitle?.substr(0,30)+'...'}
+                                            <td style={{ whiteSpace: "inherit" }}><span>
+                                                {item?.productTitle?.substr(0, 30) + '...'}
                                             </span></td>
                                             <td>
                                                 <div className='img'>
