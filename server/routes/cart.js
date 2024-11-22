@@ -24,7 +24,7 @@ router.get(`/`, async (req, res) => {
 
 router.post('/add', async (req, res) => {
 
-    const cartItem = await Cart.find({productId:req.body.productId, userId: req.body.userId});
+    const cartItem = await Cart.find({productId:req.body.productId, userId: req.body.userId, size: req.body.size});
 
     if(cartItem.length===0){
         let cartList = new Cart({
@@ -35,6 +35,7 @@ router.post('/add', async (req, res) => {
             quantity: req.body.quantity,
             subTotal: req.body.subTotal,
             productId: req.body.productId,
+            size: req.body.size,
             userId: req.body.userId,
             countInStock:req.body.countInStock,
         });
@@ -119,6 +120,7 @@ router.put('/:id', async (req, res) => {
             price: req.body.price,
             quantity: req.body.quantity,
             subTotal: req.body.subTotal,
+            size: req.body.size,
             productId: req.body.productId,
             userId: req.body.userId
         },

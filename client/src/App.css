@@ -674,6 +674,14 @@ nav .navPart2 ul li:hover .submenu {
   overflow: inherit !important;
 }
 
+.homeBannerSection .swiper .swiper-slide {
+  width: auto; /* Tự động điều chỉnh width của slide */
+  /* Thêm các style tùy chỉnh nếu cần, ví dụ: */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .homeBannerSection .swiper .item {
   overflow: hidden;
   border-radius: 10px;
@@ -2241,4 +2249,9 @@ a:hover {
 
 .myAccBox .form-group .MuiOutlinedInput-input {
   background: #f1f1f1 !important;
+}
+
+.img-fluid {
+  width: 400px;
+  height: auto;
 }

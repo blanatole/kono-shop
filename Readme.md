@@ -28,7 +28,7 @@
 ### 1. Clone repository
 
 ```bash
-git clone https://github.com/yourusername/konoshop.git
+git clone https://github.com/blanatole/kono_shop.git
 ```
 
 ### 2. Cài đặt dependencies cho từng thư mục:
@@ -39,10 +39,25 @@ cd server
 npm install --legacy-peer-deps
 ```
 
+- **Cài đặt cho thư mục client**
+```bash
+cd client
+npm install --legacy-peer-deps
+```
+
+- **Cài đặt cho thư mục admin**
+```bash
+cd admin
+npm install --legacy-peer-deps
+```
+
 ### 3. Chạy ứng dụng
+- **Chạy thư mục server trước**
 ```bash
 npm start
 ```
+
+- **Sau đó thực hiện lệnh tương tự với `client` và `admin`**
 
 ## 🤝 Đóng góp
 

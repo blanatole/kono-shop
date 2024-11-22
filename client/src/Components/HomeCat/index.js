@@ -25,7 +25,7 @@ const HomeCat = (props) => {
                     className="mySwiper"
                     breakpoints={{
                         320: {
-                            slidesPerView: 3,
+                            slidesPerView: 4,
                             spaceBetween: 10,
                           },
                         500: {
@@ -33,7 +33,7 @@ const HomeCat = (props) => {
                           spaceBetween: 10,
                         },
                         768: {
-                          slidesPerView: 8,
+                          slidesPerView: 6,
                           spaceBetween: 10,
                         }
                       }}

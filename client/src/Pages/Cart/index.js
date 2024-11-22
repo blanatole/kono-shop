@@ -40,6 +40,7 @@ const Cart = () => {
         fetchDataFromApi(`/api/cart?userId=${user?.userId}`).then((res) => {
             setCartData(res);
             setselectedQuantity(res?.quantity)
+            console.log("Data cart: ", res)
         })
     }, []);
 
@@ -60,6 +61,7 @@ const Cart = () => {
             cartFields.quantity = quantityVal
             cartFields.subTotal = parseInt(item?.price * quantityVal)
             cartFields.productId = item?.id
+            cartFields.size = item?.size
             cartFields.userId = user?.userId
 
             //console.log(item?._id)
@@ -116,9 +118,10 @@ const Cart = () => {
                                         <table className="table">
                                             <thead>
                                                 <tr>
-                                                    <th width="35%">Sản phẩm</th>
+                                                    <th width="30%">Sản phẩm</th>
+                                                    <th width="10%">Kích thước</th>
                                                     <th width="15%">Đơn giá</th>
-                                                    <th width="25%">Số lượng</th>
+                                                    <th width="20%">Số lượng</th>
                                                     <th width="15%">Thành tiền</th>
                                                     <th width="10%">Xóa</th>
                                                 </tr>
@@ -128,7 +131,7 @@ const Cart = () => {
                                                     cartData?.length !== 0 && cartData?.map((item, index) => {
                                                         return (
                                                             <tr>
-                                                                <td width="35%">
+                                                                <td width="30%">
                                                                     <Link to={`/product/${item?.productId}`}>
                                                                         <div className="d-flex align-items-center cartItemimgWrapper">
                                                                             <div className="imgWrapper">
@@ -147,8 +150,9 @@ const Cart = () => {
                                                                         </div>
                                                                     </Link>
                                                                 </td>
+                                                                <td width="10%">{item?.size}</td>
                                                                 <td width="15%">{item?.price.toLocaleString()} đ</td>
-                                                                <td width="25%">
+                                                                <td width="20%">
                                                                     <QuantityBox quantity={quantity} item={item} selectedItem={selectedItem} value={item?.quantity} />
                                                                 </td>
                                                                 <td width="15%">{item?.subTotal.toLocaleString()} đ</td>

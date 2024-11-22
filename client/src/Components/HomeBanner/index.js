@@ -17,6 +17,7 @@ const HomeBanner = (props) => {
                     slidesPerView={1}
                     spaceBetween={15}
                     navigation={context.windowWidth>992 ? true : false}
+                    centeredSlides={true}
                     loop={true}
                     speed={500}
                     autoplay={{
@@ -27,7 +28,7 @@ const HomeBanner = (props) => {
                     className="mySwiper"
                 >
                     {
-                        props?.data?.length !== 0 && props?.data?.map((item, index) => {
+                        props?.data?.length > 0 && props?.data?.map((item, index) => {
                             return (
                                 <SwiperSlide key={index}>
                                     <div className="item">

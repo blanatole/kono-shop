@@ -23,6 +23,10 @@ import { fetchDataFromApi, postData } from "./utils/api";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 
+import SuccessPage from './Pages/SuccessPage';
+import QRCodePage from './Pages/QRCodePage';
+import FailedPage from './Pages/FailedPage';
+
 const MyContext = createContext();
 
 function App() {
@@ -266,6 +270,10 @@ function App() {
           <Route exact={true} path="/orders" element={<Orders />} />
           <Route exact={true} path="/my-account" element={<MyAccount />} />
           <Route exact={true} path="/search" element={<SearchPage />} />
+          {/* <Route path="/confirmation" element={<SuccessPage />} />
+          <Route path="/payment/vnpay" element={<QRCodePage />} />
+          <Route path="/failed" element={<FailedPage />} /> */}
+
         </Routes>
         {isHeaderFooterShow === true && <Footer />}
 

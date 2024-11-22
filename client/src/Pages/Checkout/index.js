@@ -32,6 +32,10 @@ const Checkout = () => {
     const [cartData, setCartData] = useState([]);
     const [totalAmount, setTotalAmount] = useState();
 
+    const [loading, setLoading] = useState(false);
+    // const context = useContext(MyContext);
+    // const history = useNavigate();
+
     useEffect(() => {
         window.scrollTo(0, 0)
         const user = JSON.parse(localStorage.getItem("user"));
@@ -46,12 +50,20 @@ const Checkout = () => {
 
     }, []);
 
+    // const onChangeInput = (e) => {
+    //     setFormFields(() => ({
+    //         ...formFields,
+    //         [e.target.name]: e.target.value
+    //     }))
+    // }
+
     const onChangeInput = (e) => {
-        setFormFields(() => ({
-            ...formFields,
+        setFormFields(prev => ({
+            ...prev,
             [e.target.name]: e.target.value
-        }))
-    }
+        }));
+    };
+
 
     // const handlePayment = async () => {
     //     try {
@@ -67,28 +79,259 @@ const Checkout = () => {
     //     }
     // };
 
+    const context = useContext(MyContext);
+    const history = useNavigate();
+
     const calculateAmount = () => {
-        return cartData.length !== 0 ? cartData.map(item => parseInt(item.price) * item.quantity).reduce((total, value) => total + value, 0) : 0;
+        return cartData.length !== 0 
+            ? cartData.map(item => parseInt(item.price, 10) * item.quantity).reduce((total, value) => total + value, 0) 
+            : 0;
     }
 
-    const handlePayment = async () => {
-        console.log('handlePayment called');
-        const amount = calculateAmount(); // Tính toán giá trị amount từ cartData
+    const handleVNPayPayment = async (addressInfo) => {
         try {
-            const response = await axios.post(`http://localhost:4005/api/vnpay/create_payment_url`, {
-                amount: amount, // Sử dụng giá trị amount đã tính toán
-                orderDescription: 'Thanh toán đơn hàng',
+            setLoading(true);
+            const user = JSON.parse(localStorage.getItem("user"));
+            
+            // Create order first
+            const orderPayload = {
+                name: addressInfo.name,
+                phoneNumber: formFields.phoneNumber,
+                address: addressInfo.address,
+                pincode: addressInfo.pincode,
+                amount: totalAmount,
+                paymentId: "VNPAY" + Date.now(),
+                email: user.email,
+                userid: user.userId,
+                products: cartData,
+                paymentStatus: 'pending',
+                paymentMethod: 'vnpay'
+            };
+
+            // Save order to database first
+            const orderResponse = await postData('/api/orders/create', orderPayload);
+            
+            // Create VNPay payment URL
+            const response = await axios.post('http://localhost:8000/api/vnpay/create_payment_url', {
+                amount: totalAmount,
+                orderInfo: `Thanh toan don hang #${orderResponse.orderId}`,
                 orderType: 'billpayment',
                 language: 'vn',
+                orderId: orderResponse.orderId
             });
-            window.location.href = response.data.paymentUrl;
+
+            // Redirect to VNPay payment gateway
+            if (response.data.code === '00') {
+                window.location.href = response.data.data;
+            } else {
+                throw new Error('Failed to create payment URL');
+            }
         } catch (error) {
-            console.error('Error creating payment URL:', error);
+            console.error('Error creating payment:', error);
+            context.setAlertBox({
+                open: true,
+                error: true,
+                msg: "Có lỗi xảy ra khi tạo thanh toán VNPay"
+            });
+        } finally {
+            setLoading(false);
         }
     };
 
-    const context = useContext(MyContext);
-    const history = useNavigate();
+    const handlePayment = async (e, paymentMethod) => {
+        e.preventDefault();
+        
+        if (!validateForm()) {
+            return;
+        }
+
+        const addressInfo = {
+            name: formFields.fullName,
+            phoneNumber: formFields.phoneNumber,
+            address: `${formFields.streetAddressLine1}, ${formFields.streetAddressLine2}, ${formFields.district}, ${formFields.city}`,
+            pincode: formFields.zipCode,
+            date: new Date().toLocaleString("en-US", {
+                timeZone: "Asia/Ho_Chi_Minh",
+                month: "short",
+                day: "2-digit",
+                year: "numeric",
+            })
+        };
+
+        if (paymentMethod === 'vnpay') {
+            await handleVNPayPayment(addressInfo);
+        } else {
+            // Handle COD payment
+            const paymentId = "COD" + Date.now();
+            const user = JSON.parse(localStorage.getItem("user"));
+
+            const payLoad = {
+                name: addressInfo.name,
+                phoneNumber: formFields.phoneNumber,
+                address: addressInfo.address,
+                pincode: addressInfo.pincode,
+                amount: totalAmount,
+                paymentId: paymentId,
+                email: user.email,
+                userid: user.userId,
+                products: cartData,
+                paymentStatus: 'pending',
+                paymentMethod: 'cod'
+            };
+
+            try {
+                await postData(`/api/orders/create`, payLoad);
+                history("/orders");
+            } catch (error) {
+                context.setAlertBox({
+                    open: true,
+                    error: true,
+                    msg: "Có lỗi xảy ra khi tạo đơn hàng"
+                });
+            }
+        }
+    };
+
+    
+    const validateForm = () => {
+        if (formFields.fullName === "") {
+            context.setAlertBox({
+                open: true,
+                error: true,
+                msg: "Please fill full name "
+            })
+            return false
+        }
+
+        // if (formFields.country === "") {
+        //     context.setAlertBox({
+        //         open: true,
+        //         error: true,
+        //         msg: "Please fill country "
+        //     })
+        //     return false
+        // }
+
+        if (formFields.streetAddressLine1 === "") {
+            context.setAlertBox({
+                open: true,
+                error: true,
+                msg: "Please fill Street address"
+            })
+            return false
+        }
+
+        // if (formFields.streetAddressLine2 === "") {
+        //     context.setAlertBox({
+        //         open: true,
+        //         error: true,
+        //         msg: "Please fill  Street address"
+        //     })
+        //     return false
+        // }
+
+        if (formFields.city === "") {
+            context.setAlertBox({
+                open: true,
+                error: true,
+                msg: "Please fill city "
+            })
+            return false
+        }
+
+        if (formFields.district === "") {
+            context.setAlertBox({
+                open: true,
+                error: true,
+                msg: "Please fill district"
+            })
+            return false
+        }
+
+        if (formFields.zipCode === "") {
+            context.setAlertBox({
+                open: true,
+                error: true,
+                msg: "Please fill zipCode "
+            })
+            return false
+        }
+
+        const regex = /^\d+$/;
+        if (!regex.test(formFields.zipCode)) {
+            context.setAlertBox({
+                open: true,
+                error: true,
+                msg: "Please only enter digit"
+            })
+            return false
+        }
+
+        if (formFields.phoneNumber === "") {
+            context.setAlertBox({
+                open: true,
+                error: true,
+                msg: "Please fill phone Number "
+            })
+            return false
+        }
+
+        if (!regex.test(formFields.phoneNumber)) {
+            context.setAlertBox({
+                open: true,
+                error: true,
+                msg: "Please only enter digit"
+            })
+            return false
+        }
+
+        if (formFields.phoneNumber.length !== 10) {
+            context.setAlertBox({
+                open: true,
+                error: true,
+                msg: "Length of phone number must equal 10"
+            })
+            return false
+        }
+
+        if (formFields.email === "") {
+            context.setAlertBox({
+                open: true,
+                error: true,
+                msg: "Please fill email"
+            })
+            return false
+        }
+
+        const regexe = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (!regexe.test(formFields.email)) {
+            context.setAlertBox({
+                open: true,
+                error: true,
+                msg: "Please enter the correct email format (including @) !"
+            })
+            return false
+        }
+
+
+        const addressInfo = {
+            name: formFields.fullName,
+            phoneNumber: formFields.phoneNumber,
+            address: formFields.streetAddressLine1 + ", " + formFields.streetAddressLine2 + ", " + formFields.district + ", " + formFields.city,
+            pincode: formFields.zipCode,
+            date: new Date().toLocaleString(
+                "en-US",
+                {
+                    timeZone: "Asia/Ho_Chi_Minh",
+                    month: "short",
+                    day: "2-digit",
+                    year: "numeric",
+                }
+            )
+        }
+    }
+
+    
 
     const checkout = (e) => {
 
@@ -410,7 +653,7 @@ const Checkout = () => {
                                     <Button type="submit" className='btn-blue bg-red btn-lg btn-big'
                                     ><BsCash /> &nbsp; COD</Button>
 
-                                    <Button onClick={handlePayment} className='btn-blue btn-lg btn-big '
+                                    <Button onClick={(e) => handlePayment(e, 'vnpay')} className='btn-blue btn-lg btn-big ' disable={loading}
                                     ><MdOutlinePayment /> &nbsp; VNPay</Button>
                                 </div>
                             </div>

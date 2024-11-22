@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
 
+
 dotenv.config();
 
 app.use(cors());
@@ -29,7 +30,7 @@ const myListSchema = require('./routes/myList.js');
 const ordersSchema = require('./routes/orders.js');
 const homeBannerSchema = require('./routes/homeBanner.js');
 const searchRoutes = require('./routes/search.js');
-const vnpayRoutes = require('./vnpay/vnpay.js');
+const vnpayRoutes = require('./routes/payment.js');
 
 app.use("/api/user",userRoutes);
 app.use("/uploads",express.static("uploads"));
@@ -46,9 +47,9 @@ app.use(`/api/homeBanner`, homeBannerSchema);
 app.use(`/api/search`, searchRoutes);
 app.use(`/api/vnpay`, vnpayRoutes);
 
-app.listen(process.env.PORT_VNPAY, () => {
-    console.log(`Server is running at http://localhost:${process.env.PORT_VNPAY}`);
-});
+// app.listen(process.env.PORT, () => {
+//     console.log(`Server is running at http://localhost:${process.env.PORT}`);
+// });
 
 //Database
 mongoose.connect(process.env.CONNECTION_STRING, {
