@@ -17,11 +17,8 @@ const HomeBanner = ({ data = [] }) => {
                 <Swiper
                     slidesPerView={1.2}
                     spaceBetween={15}
-<<<<<<< HEAD
                     navigation={context.windowWidth>992 ? true : false}
                     centeredSlides={true}
-=======
->>>>>>> c94bb540979263765f84940040bebeeed96feb32
                     loop={true}
                     speed={5000}
                     autoplay={{
@@ -31,9 +28,8 @@ const HomeBanner = ({ data = [] }) => {
                     modules={[Navigation, Autoplay]}
                     className="mySwiper"
                 >
-<<<<<<< HEAD
                     {
-                        props?.data?.length > 0 && props?.data?.map((item, index) => {
+                        data?.length > 0 && data?.map((item, index) => {
                             return (
                                 <SwiperSlide key={index}>
                                     <div className="item">
@@ -45,15 +41,6 @@ const HomeBanner = ({ data = [] }) => {
                     }
 
 
-=======
-                    {extendedData.map((item, index) => (
-                        <SwiperSlide key={index}>
-                            <div className="item">
-                                <img src={item?.images[0]} className="w-100" alt={`Slide ${index + 1}`} />
-                            </div>
-                        </SwiperSlide>
-                    ))}
->>>>>>> c94bb540979263765f84940040bebeeed96feb32
                 </Swiper>
             </div>
         </div>
