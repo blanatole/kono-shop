@@ -12,6 +12,8 @@ const subCatSchema = mongoose.Schema({
     }
 })
 
+subCatSchema.index({ category: 1 });
+
 subCatSchema.virtual('id').get(function () {
     return this._id.toHexString();
 });

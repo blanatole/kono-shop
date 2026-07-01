@@ -27,6 +27,9 @@ const myListSchema = mongoose.Schema({
     }
 })
 
+myListSchema.index({ userId: 1 });
+myListSchema.index({ userId: 1, productId: 1 });
+
 myListSchema.virtual('id').get(function () {
     return this._id.toHexString();
 });

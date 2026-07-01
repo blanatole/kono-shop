@@ -9,20 +9,17 @@ import { MyContext } from "../../App";
 const HomeBanner = ({ data = [] }) => {
     const context = useContext(MyContext);
 
-    const extendedData = [...data, ...data, ...data, ...data, ...data, ...data, ...data, ...data, ...data, ...data, ...data, ...data, ...data, ...data, ...data, ...data, ...data, ...data, ...data, ...data, ...data, ...data, ...data, ...data, ...data, ...data, ...data];
-
     return (
-        <div className="container mt-3">
+        <div className="container homeBannerContainer">
             <div className="homeBannerSection">
                 <Swiper
-                    slidesPerView={1.2}
-                    spaceBetween={15}
+                    slidesPerView={1}
+                    spaceBetween={12}
                     navigation={context.windowWidth>992 ? true : false}
-                    centeredSlides={true}
                     loop={true}
-                    speed={5000}
+                    speed={650}
                     autoplay={{
-                        delay: 0,
+                        delay: 3500,
                         disableOnInteraction: false,
                     }}
                     modules={[Navigation, Autoplay]}
@@ -33,7 +30,7 @@ const HomeBanner = ({ data = [] }) => {
                             return (
                                 <SwiperSlide key={index}>
                                     <div className="item">
-                                        <img src={item?.images[0]} className="w-100" />
+                                        <img src={item?.images[0]} className="w-100" alt={`Home banner ${index + 1}`} />
                                     </div>
                                 </SwiperSlide>
                             )

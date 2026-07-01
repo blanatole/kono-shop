@@ -1,69 +1,180 @@
-# KonoShop
+# Kono Shop
 
-**KonoShop** là một dự án front-end dành cho cửa hàng bán quần áo trực tuyến. Dự án được xây dựng với mục tiêu cung cấp trải nghiệm mua sắm trực quan và dễ sử dụng, cho phép người dùng duyệt, tìm kiếm và mua sắm các sản phẩm thời trang.
+Kono Shop la du an ecommerce gom 3 phan:
 
-## 🛠️ Công nghệ sử dụng
+- `server`: API Node.js/Express, MongoDB/Mongoose, Cloudinary upload.
+- `client`: website khach hang React + Vite.
+- `admin`: dashboard quan tri React + Vite.
 
-- **React.js**: Thư viện JavaScript để xây dựng giao diện người dùng.
-- **Styled-components**: Giúp tổ chức và quản lý CSS trong các component.
-- **Axios**: Thư viện để thực hiện các yêu cầu HTTP (REST API).
-- **React Router**: Điều hướng giữa các trang trong ứng dụng.
-- **Context API**: Quản lý trạng thái toàn cục cho ứng dụng.
-- **LocalStorage**: Lưu trữ thông tin người dùng và giỏ hàng.
+Trang thai hien tai:
 
-## 🌟 Tính năng
+- Da bo nen Create React App/react-scripts, client va admin dang build bang Vite.
+- Client build OK o port `3008`.
+- Admin build OK o port `3002`.
+- Backend chay o port `8000` va co endpoint health.
+- MongoDB Atlas da cau hinh trong `server/.env`.
+- Da seed demo tu du lieu public TokyoLife: 10 categories, 10 subcategories, 100 products, 10 sizes, 10 weights, 10 banners.
+- Thanh toan online/VNPay tam thoi de xu ly sau.
 
-- **Trang chủ**: Hiển thị các sản phẩm nổi bật và khuyến mãi.
-- **Danh mục sản phẩm**: Xem và lọc các sản phẩm theo danh mục (nam, nữ, phụ kiện, v.v.).
-- **Tìm kiếm sản phẩm**: Cho phép người dùng tìm kiếm sản phẩm theo từ khóa.
-- **Chi tiết sản phẩm**: Hiển thị thông tin chi tiết, giá cả, mô tả, và hình ảnh sản phẩm.
-- **Giỏ hàng**: Quản lý các sản phẩm đã thêm vào giỏ hàng, thay đổi số lượng, và tính tổng giá trị đơn hàng.
-- **Thanh toán**: Người dùng có thể hoàn tất mua hàng thông qua trang thanh toán.
-- **Quản lý người dùng**: Đăng ký, đăng nhập và quản lý tài khoản người dùng.
+## Moi truong da kiem tra
 
-## 🚀 Cài đặt và chạy dự án
+- Node.js: `20.12.2`
+- npm: `10.5.0`
+- Backend: `http://localhost:8000`
+- Client: `http://localhost:3008`
+- Admin: `http://localhost:3002`
 
-Để cài đặt và chạy dự án trên máy của bạn, hãy làm theo các bước dưới đây:
+## Cai dat
 
-### 1. Clone repository
+Chay tu thu muc goc:
 
-```bash
-git clone https://github.com/blanatole/kono_shop.git
+```powershell
+npm --prefix server install --legacy-peer-deps
+npm --prefix client install --legacy-peer-deps
+npm --prefix admin install --legacy-peer-deps
 ```
 
-### 2. Cài đặt dependencies cho từng thư mục:
-- **Mở 3 terminal**
-- **Cài đặt cho thư mục server**
-```bash
-cd server
-npm install --legacy-peer-deps
+Tao file moi truong local tu file mau:
+
+```powershell
+Copy-Item server/.env.example server/.env
+Copy-Item client/.env.example client/.env
+Copy-Item admin/.env.example admin/.env
 ```
 
-- **Cài đặt cho thư mục client**
-```bash
-cd client
-npm install --legacy-peer-deps
+Sau do dien MongoDB Atlas, Firebase, Cloudinary, JWT va cac key thanh toan vao file `.env` tuong ung.
+
+## Chay local
+
+Mo 3 terminal rieng:
+
+```powershell
+npm run start:server
 ```
 
-- **Cài đặt cho thư mục admin**
-```bash
-cd admin
-npm install --legacy-peer-deps
+```powershell
+npm run start:client
 ```
 
-### 3. Chạy ứng dụng
-- **Chạy thư mục server trước**
-```bash
-npm start
+```powershell
+npm run start:admin
 ```
 
-- **Sau đó thực hiện lệnh tương tự với `client` và `admin`**
+URL:
 
-## 🤝 Đóng góp
+```text
+API:    http://localhost:8000
+Client: http://localhost:3008
+Admin:  http://localhost:3002
+```
 
-Nếu bạn muốn đóng góp vào dự án, hãy mở pull request hoặc tạo issue. Chúng tôi rất hoan nghênh sự đóng góp từ cộng đồng!
+Kiem tra backend:
 
+```powershell
+Invoke-RestMethod http://localhost:8000/api/health
+```
 
-## 📧 Liên hệ
+Ket qua mong doi:
 
-Nếu bạn có bất kỳ câu hỏi nào về dự án, vui lòng liên hệ với chúng tôi tại nguyenminhy7714@gmail.com
+```json
+{
+  "status": "ok",
+  "database": "connected"
+}
+```
+
+## Build
+
+```powershell
+npm run build:client
+npm run build:admin
+```
+
+Build hien pass. Vite van co canh bao bundle lon hon 500 kB; day la canh bao toi uu hieu nang, khong chan web chay.
+
+## Database
+
+Tao collections va indexes theo cac model trong `server/models`:
+
+```powershell
+npm run db:init
+```
+
+Seed du lieu demo tu TokyoLife. Script se chon 10 category co it nhat 10 san pham public va tao 10 san pham cho moi category:
+
+```powershell
+npm run seed:tokyolife
+```
+
+Kiem tra so luong du lieu trong MongoDB:
+
+```powershell
+npm run db:check
+```
+
+Ket qua sau khi seed:
+
+```json
+{
+  "users": 1,
+  "categories": 10,
+  "subcategories": 10,
+  "products": 100,
+  "productreviews": 0,
+  "productsizes": 10,
+  "productweights": 10,
+  "recentlyviewds": 0,
+  "carts": 0,
+  "mylists": 0,
+  "orders": 0,
+  "homebanners": 10,
+  "imageuploads": 0
+}
+```
+
+## Env
+
+File dang dung:
+
+- `server/.env`
+- `client/.env`
+- `admin/.env`
+
+Ba file `.env` nay chi dung local va da duoc ignore. Khi can cau hinh may moi, copy tu:
+
+- `server/.env.example`
+- `client/.env.example`
+- `admin/.env.example`
+
+Frontend Vite dung prefix `VITE_`:
+
+```env
+VITE_API_URL=http://localhost:8000
+VITE_BASE_URL=http://localhost:8000
+```
+
+Backend can:
+
+```env
+PORT=8000
+DB_NAME=kono_shop
+CONNECTION_STRING=<mongodb-atlas-uri>
+JSON_WEB_TOKEN_SECRET_KEY=<jwt-secret>
+```
+
+Khong dua credential MongoDB/Firebase/Cloudinary len README hoac commit public.
+
+## Dependency note
+
+- React giu o `18.2.0`.
+- `react-router-dom` dang o `6.30.3`.
+- MUI giu major 5, dang o `5.18.0`.
+- `axios` dang o `1.18.1`.
+- `firebase` dang o `10.14.1`.
+- `swiper` dang o `14.0.1`.
+- Vite dung `6.4.3` vi Node hien tai la `20.12.2`; Vite 8 yeu cau Node moi hon.
+- Da go `react-scripts`, `react-swipeable-views`, `@mui/styled-engine-sc`, `styled-components` o client va `react-image-lightbox` o admin.
+
+## Tam thoi bo qua
+
+Luong thanh toan online/VNPay dang de xu ly sau. Nut VNPay tren client da bi disable tam thoi; COD van la luong checkout hien co.

@@ -61,13 +61,17 @@ router.post(`/upload`, upload.array("images"), async (req, res) => {
   }
 });
 
+const isRootCategory = (category) => {
+  return category.parentId === undefined || category.parentId === null || category.parentId === "";
+};
+
 const createCategories = (categories, parentId=null) => {
 
   const categoryList = [];
   let category;
 
   if (parentId == null) {
-    category = categories.filter((cat) => cat.parentId == undefined);
+    category = categories.filter((cat) => isRootCategory(cat));
   } else {
     category = categories.filter((cat) => cat.parentId == parentId);
   }
@@ -112,7 +116,13 @@ router.get(`/`, async (req, res) => {
 });
 
 router.get(`/get/count`, async (req, res) => {
-  const categoryCount = await Category.countDocuments({parentId:undefined});
+  const categoryCount = await Category.countDocuments({
+    $or: [
+      { parentId: { $exists: false } },
+      { parentId: null },
+      { parentId: "" },
+    ],
+  });
 
   if (!categoryCount) {
     res.status(500).json({ success: false });
@@ -134,7 +144,7 @@ router.get(`/subCat/get/count`, async (req, res) => {
 
   const subCatList = [];
   for (let cat of categoryCount) {
-    if(cat.parentId!==undefined){
+    if(!isRootCategory(cat)){
       subCatList.push(cat);
     }
   }
@@ -152,7 +162,7 @@ const createCat = (categories, parentId=null,cat) => {
   let category;
 
   if (parentId == null) {
-    category = categories.filter((cat) => cat.parentId == undefined);
+    category = categories.filter((cat) => isRootCategory(cat));
   } else {
     category = categories.filter((cat) => cat.parentId == parentId);
 

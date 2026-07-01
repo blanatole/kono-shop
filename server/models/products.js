@@ -88,6 +88,13 @@ const productSchema = mongoose.Schema({
     },
 })
 
+productSchema.index({ category: 1 });
+productSchema.index({ catId: 1, location: 1 });
+productSchema.index({ subCatId: 1, location: 1 });
+productSchema.index({ isFeatured: 1, location: 1 });
+productSchema.index({ rating: 1, catId: 1, location: 1 });
+productSchema.index({ rating: 1, subCatId: 1, location: 1 });
+productSchema.index({ name: "text", brand: "text", catName: "text", subCat: "text" });
 
 productSchema.virtual('id').get(function () {
     return this._id.toHexString();

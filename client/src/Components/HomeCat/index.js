@@ -14,7 +14,12 @@ const HomeCat = (props) => {
     return (
         <section className="homeCat pb-2">
             <div className="container">
-                <h3 className="mb-3 hd">Featured Categories</h3>
+                <div className="sectionTitleRow">
+                    <div>
+                        <span className="sectionEyebrow">Danh muc noi bat</span>
+                        <h3 className="mb-0 hd">Featured Categories</h3>
+                    </div>
+                </div>
                 <Swiper
                     slidesPerView={6}
                     spaceBetween={8}
@@ -25,12 +30,20 @@ const HomeCat = (props) => {
                     className="mySwiper"
                     breakpoints={{
                         320: {
-                            slidesPerView: 4,
+                            slidesPerView: 2.2,
+                            spaceBetween: 10,
+                        },
+                        576: {
+                            slidesPerView: 3,
                             spaceBetween: 10,
                         },
                         768: {
-                          slidesPerView: 6,
-                          spaceBetween: 10,
+                            slidesPerView: 4,
+                            spaceBetween: 10,
+                        },
+                        1100: {
+                            slidesPerView: 6,
+                            spaceBetween: 10,
                         }
                     }}
                 >
@@ -38,8 +51,10 @@ const HomeCat = (props) => {
                         props.catData?.length !== 0 && props.catData?.map((cat, index) => (
                             <SwiperSlide key={index}>
                                 <Link to={`/products/category/${cat._id}`}>
-                                    <div className="item text-center cursor" style={{ background: cat.color }}>
-                                        <img src={cat.images?.[0]} alt={`${cat.name} category`} />
+                                    <div className="item text-center cursor">
+                                        <div className="catImage">
+                                            <img src={cat.images?.[0]} alt={`${cat.name} category`} />
+                                        </div>
                                         <h6>{cat.name}</h6>
                                     </div>
                                 </Link>

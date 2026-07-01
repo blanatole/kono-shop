@@ -66,6 +66,10 @@ const ordersSchema = mongoose.Schema({
 
 })
 
+ordersSchema.index({ userid: 1 });
+ordersSchema.index({ status: 1, date: -1 });
+ordersSchema.index({ email: 1 });
+
 ordersSchema.virtual('id').get(function () {
     return this._id.toHexString();
 });

@@ -653,7 +653,7 @@ const Checkout = () => {
                                     <Button type="submit" className='btn-blue bg-red btn-lg btn-big'
                                     ><BsCash /> &nbsp; COD</Button>
 
-                                    <Button onClick={(e) => handlePayment(e, 'vnpay')} className='btn-blue btn-lg btn-big ' disable={loading}
+                                    <Button type="button" className='btn-blue btn-lg btn-big ' disabled
                                     ><MdOutlinePayment /> &nbsp; VNPay</Button>
                                 </div>
                             </div>

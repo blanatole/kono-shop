@@ -7,7 +7,8 @@ const userSchema = mongoose.Schema({
     },
     phone:{
         type:String,
-        unique:true
+        unique:true,
+        sparse:true
     },
     email:{
         type:String,
@@ -28,6 +29,8 @@ const userSchema = mongoose.Schema({
         default: false,
     }
 })
+
+userSchema.index({ isAdmin: 1 });
 
 userSchema.virtual('id').get(function () {
     return this._id.toHexString();

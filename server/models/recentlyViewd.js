@@ -82,6 +82,9 @@ const recentlyViewdSchema = mongoose.Schema({
     },
 })
 
+recentlyViewdSchema.index({ prodId: 1 });
+recentlyViewdSchema.index({ category: 1 });
+recentlyViewdSchema.index({ subCatId: 1 });
 
 recentlyViewdSchema.virtual('id').get(function () {
     return this._id.toHexString();

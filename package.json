@@ -1,7 +1,14 @@
 {
-  "dependencies": {
-    "body-parser": "^1.20.3",
-    "crypto": "^1.0.1",
-    "express": "^4.21.1"
+  "name": "kono-shop",
+  "private": true,
+  "scripts": {
+    "start:server": "npm --prefix server start",
+    "start:client": "npm --prefix client start",
+    "start:admin": "npm --prefix admin start",
+    "build:client": "npm --prefix client run build",
+    "build:admin": "npm --prefix admin run build",
+    "db:init": "npm --prefix server run db:init",
+    "db:check": "npm --prefix server run db:check",
+    "seed:tokyolife": "npm --prefix server run seed:tokyolife"
   }
 }

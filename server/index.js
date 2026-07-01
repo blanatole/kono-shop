@@ -8,6 +8,9 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
+let isDbConnected = false;
+const PORT = process.env.PORT || 8000;
+
 app.use(cors());
 app.options('*', cors())
 
@@ -47,22 +50,38 @@ app.use(`/api/homeBanner`, homeBannerSchema);
 app.use(`/api/search`, searchRoutes);
 app.use(`/api/vnpay`, vnpayRoutes);
 
-// app.listen(process.env.PORT, () => {
-//     console.log(`Server is running at http://localhost:${process.env.PORT}`);
-// });
+app.get('/api/health', (req, res) => {
+    res.status(200).json({
+        status: 'ok',
+        database: isDbConnected ? 'connected' : 'disconnected'
+    });
+});
 
 //Database
-mongoose.connect(process.env.CONNECTION_STRING, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-})
+if (process.env.CONNECTION_STRING) {
+const dbOptions = process.env.DB_NAME ? { dbName: process.env.DB_NAME } : {};
+
+mongoose.connection.on('connected', () => {
+    isDbConnected = true;
+});
+
+mongoose.connection.on('disconnected', () => {
+    isDbConnected = false;
+});
+
+mongoose.connect(process.env.CONNECTION_STRING, dbOptions)
     .then(() => {
+        isDbConnected = true;
         console.log('Database Connection is ready...');
-        //Server
-        app.listen(process.env.PORT, () => {
-            console.log(`server is running http://localhost:${process.env.PORT}`);
-        })
     })
     .catch((err) => {
-        console.log(err);
-    })
+        isDbConnected = false;
+        console.error('Database connection failed:', err.message);
+    });
+} else {
+    console.warn('CONNECTION_STRING is not set. Server will run without database connection.');
+}
+
+app.listen(PORT, () => {
+    console.log(`server is running http://localhost:${PORT}`);
+});

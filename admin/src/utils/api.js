@@ -1,18 +1,21 @@
 import axios from "axios";
 
-const token=localStorage.getItem("token");
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
-const params={
-    headers: {
-        'Authorization': `Bearer ${token}`, // Include your API key in the Authorization header
-        'Content-Type': 'application/json', // Adjust the content type as needed
-      },
+const getAuthConfig = () => {
+    const token = localStorage.getItem("token");
 
-} 
+    return {
+        headers: {
+            'Authorization': `Bearer ${token || ""}`,
+            'Content-Type': 'application/json',
+        },
+    };
+};
 
 export const fetchDataFromApi = async (url) => {
     try {
-        const { data } = await axios.get(process.env.REACT_APP_BASE_URL + url,params)
+        const { data } = await axios.get(BASE_URL + url, getAuthConfig())
         return data;
     } catch (error) {
         console.log(error);
@@ -22,18 +25,19 @@ export const fetchDataFromApi = async (url) => {
 
 
 export const uploadImage = async (url, formData) => {
-    const { res } = await axios.post(process.env.REACT_APP_BASE_URL + url , formData)
-    return res;
+    const { data } = await axios.post(BASE_URL + url, formData)
+    return data;
 }
 
 export const postData = async (url, formData) => {
 
     try {
-        const response = await fetch(process.env.REACT_APP_BASE_URL + url, {
+        const token = localStorage.getItem("token");
+        const response = await fetch(BASE_URL + url, {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${token}`, // Include your API key in the Authorization header
-                'Content-Type': 'application/json', // Adjust the content type as needed
+                'Authorization': `Bearer ${token || ""}`,
+                'Content-Type': 'application/json',
               },
            
             body: JSON.stringify(formData)
@@ -60,17 +64,20 @@ export const postData = async (url, formData) => {
 
 
 export const editData = async (url, updatedData ) => {
-    const { res } = await axios.put(`${process.env.REACT_APP_BASE_URL}${url}`,updatedData)
-    return res;
+    const { data } = await axios.put(`${BASE_URL}${url}`, updatedData, getAuthConfig())
+    return data;
 }
 
 export const deleteData = async (url ) => {
-    const { res } = await axios.delete(`${process.env.REACT_APP_BASE_URL}${url}`,params)
-    return res;
+    const { data } = await axios.delete(`${BASE_URL}${url}`, getAuthConfig())
+    return data;
 }
 
 
 export const deleteImages = async (url,image ) => {
-    const { res } = await axios.delete(`${process.env.REACT_APP_BASE_URL}${url}`,image);
-    return res;
+    const { data } = await axios.delete(`${BASE_URL}${url}`, {
+        ...getAuthConfig(),
+        data: image,
+    });
+    return data;
 }

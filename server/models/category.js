@@ -25,6 +25,8 @@ const categorySchema = mongoose.Schema({
     }
 },{timestamps:true})
 
+categorySchema.index({ parentId: 1 });
+
 categorySchema.virtual('id').get(function () {
     return this._id.toHexString();
 });

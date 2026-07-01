@@ -43,6 +43,9 @@ const cartSchema = mongoose.Schema({
     }
 })
 
+cartSchema.index({ userId: 1 });
+cartSchema.index({ userId: 1, productId: 1, size: 1 });
+
 cartSchema.virtual('id').get(function () {
     return this._id.toHexString();
 });

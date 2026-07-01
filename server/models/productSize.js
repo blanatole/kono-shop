@@ -7,6 +7,8 @@ const productSizeSchema = mongoose.Schema({
     }
 })
 
+productSizeSchema.index({ size: 1 });
+
 productSizeSchema.virtual('id').get(function () {
     return this._id.toHexString();
 });

@@ -28,6 +28,7 @@ const productReviewsSchema = mongoose.Schema({
         default: Date.now,
     }
 })
+productReviewsSchema.index({ productId: 1 });
 productReviewsSchema.index({ customerId: 1, productId: 1 }, { unique: true });
 productReviewsSchema.virtual('id').get(function () {
     return this._id.toHexString();

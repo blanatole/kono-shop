@@ -7,6 +7,8 @@ const productWeightSchema = mongoose.Schema({
     }
 })
 
+productWeightSchema.index({ productWeight: 1 });
+
 productWeightSchema.virtual('id').get(function () {
     return this._id.toHexString();
 });
